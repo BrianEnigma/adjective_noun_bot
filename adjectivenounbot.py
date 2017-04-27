@@ -3,8 +3,13 @@
 import sys
 import random
 import string
+import urllib
+import urllib2
+import json
 import twitter
 from local_settings import *
+
+API_ENDPOINT = 'https://api.cognitive.microsoft.com/bing/v5.0/images/search'
 
 def connect():
     api = twitter.Api(consumer_key=MY_CONSUMER_KEY,
@@ -31,6 +36,27 @@ def GetWord(dictFilePath):
     inFile.close()
     return word
 
+def GetImageURL(searchTerm):
+    url = API_ENDPOINT + '?'
+    url += 'count=1&'
+    url += 'q=' + urllib.quote(searchTerm)
+
+    req = urllib2.Request(url)
+    req.add_header('Ocp-Apim-Subscription-Key', BING_API_KEY)
+    resp = urllib2.urlopen(req)
+    content = resp.read()
+
+    try:
+
+        j = json.loads(content)
+
+        return j['value'][0]['contentUrl']
+
+    except IndexError:
+        return ''
+    except:
+        return ''
+
 def GetAdjectiveNoun():
     adjective = GetWord('adjective.txt')
     noun = GetWord('noun.txt')
@@ -47,12 +73,19 @@ def lambda_handler(event, context):
         adjectiveNoun = GetAdjectiveNoun()
         if (len(adjectiveNoun) > 3):
             tweet_text = adjectiveNoun
+            image_url = GetImageURL(adjectiveNoun)
+            #if (len(image_url) > 0):
+            #    tweet_text += "\n\n" + image_url
+            #print image_url
 
             # todo: image search for picture and attach?
 
             if DEBUG == False:
                 api=connect()
-                status = api.PostUpdate(tweet_text)
+                if (len(image_url) > 0):
+                    status = api.PostUpdate(status = tweet_text, media = image_url)
+                else:
+                    status = api.PostUpdate(tweet_text)
                 result += 'Tweeted: '
                 result += tweet_text
                 result += ''
