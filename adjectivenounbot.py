@@ -6,6 +6,7 @@ import string
 import urllib
 import urllib2
 import json
+import time
 import twitter
 from local_settings import *
 
@@ -64,36 +65,44 @@ def GetAdjectiveNoun():
 
 def lambda_handler(event, context):
     result = ''
+    image_url = ''
     if DEBUG==False:
         guess = random.choice(range(ODDS))
     else:
         guess = 0
 
     if guess == 0:
-        adjectiveNoun = GetAdjectiveNoun()
-        if (len(adjectiveNoun) > 3):
-            tweet_text = adjectiveNoun
-            image_url = GetImageURL(adjectiveNoun)
-            #if (len(image_url) > 0):
-            #    tweet_text += "\n\n" + image_url
-            #print image_url
+        for retryCounter in range(0, 10):
+            adjectiveNoun = GetAdjectiveNoun()
+            if (len(adjectiveNoun) > 3):
+                tweet_text = adjectiveNoun
+                image_url = GetImageURL(adjectiveNoun)
+                if (len(image_url) == 0):
+                    #print "NO IMAGE FOR " + adjectiveNoun + ". RETRYING."
+                    time.sleep(2) # don't hammer the server
+                    continue
+                #if (len(image_url) > 0):
+                #    tweet_text += "\n\n" + image_url
+                print adjectiveNoun
+                print image_url
 
-            # todo: image search for picture and attach?
+                # todo: image search for picture and attach?
 
-            if DEBUG == False:
-                api=connect()
-                if (len(image_url) > 0):
-                    status = api.PostUpdate(status = tweet_text, media = image_url)
+                if DEBUG == False:
+                    api=connect()
+                    if (len(image_url) > 0):
+                        status = api.PostUpdate(status = tweet_text, media = image_url)
+                    else:
+                        status = api.PostUpdate(tweet_text)
+                    result += 'Tweeted: '
+                    result += tweet_text
+                    result += ''
                 else:
-                    status = api.PostUpdate(tweet_text)
-                result += 'Tweeted: '
-                result += tweet_text
-                result += ''
-            else:
-                result += tweet_text
-                result += ''
+                    result += tweet_text
+                    result += ''
+                break
     else:
         result += str(guess) + " No, sorry, not this time.\n" #message if the random number fails.
 
-    return {'message': result}
+    return {'message': result, 'url': image_url}
 
