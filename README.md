@@ -4,7 +4,7 @@
 
 [@AdjNounBot](https://twitter.com/adjnounbot) is a Twitter bot that runs on AWS Lambda. Three times a day, it posts a word pair (one adjective and one noun) and the top result of an image search for those words.
 
-Long ago, during the wild times of the 2004 internet, I ran a site of web experiments called Adjective Noun. More on that in a blog post (TODO: write and link). The site's header had random (but curated) pairings adjectives with nouns, coupled with a clever stock photo. The site has faded into obscurity, but the concept has never disappeared from my mind.
+Long ago, during the wild times of the 2004 internet, I ran a site of web experiments called Adjective Noun. More on that [in a blog post](https://netninja.com/2017/04/29/building-the-adjectivenounbot-on-aws/). The site's header had random (but curated) pairings adjectives with nouns, coupled with a clever stock photo. The site has faded into obscurity, but the concept has never disappeared from my mind.
 
 This bot is a reconceptualization of that technique — perhaps a little more automated, a little less curated — for the modern Twitter world.
 
