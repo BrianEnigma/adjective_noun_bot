@@ -4321,9 +4321,6 @@ bistre
 bistro
 bit
 bitartrate
-bitch
-bitchery
-bitchiness
 bite
 biteplate
 biter
@@ -5592,7 +5589,6 @@ bullock
 bullpen
 bullring
 bullrush
-bullshit
 bullshot
 bullterrier
 bully
@@ -7326,7 +7322,6 @@ chickamauga
 chickasaw
 chicken
 chickenpox
-chickenshit
 chickpea
 chickweed
 chicle
@@ -9994,7 +9989,6 @@ cunnilinctus
 cunnilingus
 cunning
 cunningham
-cunt
 cup
 cupbearer
 cupboard
@@ -15805,10 +15799,6 @@ ftc
 ftp
 fuchs
 fuchsia
-fuck
-fucker
-fucking
-fuckup
 fucoid
 fucus
 fuddle
@@ -19047,7 +19037,6 @@ horseplay
 horsepond
 horsepower
 horseradish
-horseshit
 horseshoe
 horseshoer
 horseshoes
@@ -25985,7 +25974,6 @@ moth
 mothball
 mother
 motherese
-motherfucker
 motherhood
 motherland
 motherliness
@@ -36238,14 +36226,6 @@ shirttail
 shirtwaist
 shirtwaister
 shisha
-shit
-shite
-shithead
-shitlist
-shittah
-shittim
-shittimwood
-shitting
 shiv
 shiva
 shivah
