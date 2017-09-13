@@ -44,7 +44,14 @@ def GetImageURL(searchTerm):
 
     req = urllib2.Request(url)
     req.add_header('Ocp-Apim-Subscription-Key', BING_API_KEY)
-    resp = urllib2.urlopen(req)
+    try:
+        resp = urllib2.urlopen(req)
+    except urllib2.HTTPError as err:
+        if 401 != err.code:
+            raise err
+        print "Got 401 unauthorized error\n"
+        return 'https://netninja.com/images/error_401.png'
+    
     content = resp.read()
 
     try:
