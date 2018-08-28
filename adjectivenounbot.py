@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import sys
 import random
 import string
@@ -7,17 +8,19 @@ import urllib
 import urllib2
 import json
 import time
-# https://github.com/bear/python-twitter
-import twitter
+# https://github.com/halcy/Mastodon.py
+# https://mastodonpy.readthedocs.io/en/latest/
+from mastodon import Mastodon
 from local_settings import *
 
 API_ENDPOINT = 'https://api.cognitive.microsoft.com/bing/v5.0/images/search'
 
 def connect():
-    api = twitter.Api(consumer_key=MY_CONSUMER_KEY,
-                          consumer_secret=MY_CONSUMER_SECRET,
-                          access_token_key=MY_ACCESS_TOKEN_KEY,
-                          access_token_secret=MY_ACCESS_TOKEN_SECRET)
+    api = Mastodon(
+        client_secret = CLIENT_SECRET,
+        access_token = ACCESS_TOKEN,
+        api_base_url = 'https://mastodon.cloud'
+        )
     return api
 
 def GetWord(dictFilePath):
@@ -97,14 +100,7 @@ def lambda_handler(event, context):
                 # todo: image search for picture and attach?
 
                 if DEBUG == False:
-                    api=connect()
-                    if (len(image_url) > 0):
-                        status = api.PostUpdate(status = tweet_text, media = image_url)
-                    else:
-                        status = api.PostUpdate(tweet_text)
-                    result += 'Tweeted: '
-                    result += tweet_text
-                    result += ''
+                    result += DoPost(tweet_text, image_url)
                 else:
                     result += tweet_text
                     result += ''
@@ -113,4 +109,35 @@ def lambda_handler(event, context):
         result += str(guess) + " No, sorry, not this time.\n" #message if the random number fails.
 
     return {'message': result, 'url': image_url}
+
+def DoPost(tweet_text, image_url):
+    result = ''
+    api = connect()
+    local_filename = ''
+    media_id = 0
+    if (len(image_url) > 0):
+        req = urllib2.Request(image_url)
+        resp = urllib2.urlopen(req)
+        content = resp.read()
+        image_mime_type = resp.info().type
+        print "mime_type is " + image_mime_type
+
+        post_result = api.media_post(
+                media_file = content,
+                mime_type = image_mime_type,
+                description = tweet_text)
+        media_id = (int) (post_result['id'])
+
+
+    if (media_id != 0):
+        status = api.status_post(
+                status = tweet_text,
+                media_ids = media_id)
+    else:
+        status = api.status_post(
+                status = tweet_text)
+    result += 'Tweeted: '
+    result += tweet_text
+    result += ''
+    return result
 
