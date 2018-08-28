@@ -7,6 +7,7 @@ import urllib
 import urllib2
 import json
 import time
+# https://github.com/bear/python-twitter
 import twitter
 from local_settings import *
 
