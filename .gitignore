@@ -2,4 +2,5 @@ local_settings.py
 package
 python-twitter
 adjective_noun_bot.zip
+*.pyc
 **/.DS_Store
