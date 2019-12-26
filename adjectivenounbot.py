@@ -67,10 +67,12 @@ def GetImageURL(searchTerm):
     except:
         return ''
 
+
 def GetAdjectiveNoun():
     adjective = GetWord('adjective.txt')
     noun = GetWord('noun.txt')
     return adjective + " " + noun
+
 
 def lambda_handler(event, context):
     result = ''
@@ -87,7 +89,7 @@ def lambda_handler(event, context):
                 tweet_text = adjectiveNoun
                 image_url = GetImageURL(adjectiveNoun)
                 if (len(image_url) == 0):
-                    #print "NO IMAGE FOR " + adjectiveNoun + ". RETRYING."
+                    #print("NO IMAGE FOR " + adjectiveNoun + ". RETRYING.")
                     time.sleep(2) # don't hammer the server
                     continue
                 #if (len(image_url) > 0):
@@ -108,16 +110,17 @@ def lambda_handler(event, context):
 
     return {'message': result, 'url': image_url}
 
+
 def DoPost(tweet_text, image_url):
     result = ''
     api = connect()
     local_filename = ''
     media_id = 0
-    if (len(image_url) > 0):
-        req = urllib2.Request(image_url)
-        resp = urllib2.urlopen(req)
+    if len(image_url) > 0:
+        req = urllib.request.Request(url=image_url)
+        resp = urllib.request.urlopen(req)
         content = resp.read()
-        image_mime_type = resp.info().type
+        image_mime_type = resp.info().get_content_type()
         print("mime_type is " + image_mime_type)
 
         post_result = api.media_post(
@@ -126,8 +129,7 @@ def DoPost(tweet_text, image_url):
                 description = tweet_text)
         media_id = (int) (post_result['id'])
 
-
-    if (media_id != 0):
+    if media_id != 0:
         status = api.status_post(
                 status = tweet_text,
                 media_ids = media_id)
