@@ -18,7 +18,7 @@ python-twitter:
 	mkdir -p python-twitter
 	echo '[install]' > ./python-twitter/setup.cfg
 	echo 'prefix=' >> ./python-twitter/setup.cfg
-	cd $(HERE)/python-twitter ; pip install python-twitter -t $(HERE)/python-twitter
+	cd $(HERE)/python-twitter ; pip3 install python-twitter -t $(HERE)/python-twitter
 
 clean:
 	rm -rf package

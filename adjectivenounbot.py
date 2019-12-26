@@ -1,10 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import random
 import string
 import urllib
-import urllib2
 import json
 import time
 # https://github.com/bear/python-twitter
@@ -41,16 +40,15 @@ def GetWord(dictFilePath):
 def GetImageURL(searchTerm):
     url = API_ENDPOINT + '?'
     url += 'count=1&'
-    url += 'q=' + urllib.quote(searchTerm)
+    url += 'q=' + urllib.parse.quote(searchTerm, safe='')
 
-    req = urllib2.Request(url)
-    req.add_header('Ocp-Apim-Subscription-Key', BING_API_KEY)
+    req = urllib.request.Request(url=url, headers={'Ocp-Apim-Subscription-Key': BING_API_KEY})
     try:
-        resp = urllib2.urlopen(req)
-    except urllib2.HTTPError as err:
+        resp = urllib.request.urlopen(req)
+    except urllib.HTTPError as err:
         if 401 != err.code:
             raise err
-        print "Got 401 unauthorized error\n"
+        print("Got 401 unauthorized error")
         return 'https://netninja.com/images/error_401.png'
     
     content = resp.read()
@@ -86,13 +84,13 @@ def lambda_handler(event, context):
                 tweet_text = adjectiveNoun
                 image_url = GetImageURL(adjectiveNoun)
                 if (len(image_url) == 0):
-                    #print "NO IMAGE FOR " + adjectiveNoun + ". RETRYING."
+                    #print("NO IMAGE FOR " + adjectiveNoun + ". RETRYING.")
                     time.sleep(2) # don't hammer the server
                     continue
                 #if (len(image_url) > 0):
                 #    tweet_text += "\n\n" + image_url
-                print adjectiveNoun
-                print image_url
+                print(adjectiveNoun)
+                print(image_url)
 
                 # todo: image search for picture and attach?
 
