@@ -2,12 +2,13 @@ HERE=$(shell pwd)
 all: deploy
 
 deploy: package
-	cd package; zip -r ../adjective_noun_bot.zip *
+	cd package; zip -r ../adjective_noun_bot.zip * .libs_cffi_backend
 	#aws s3 cp lambda_ebooks.zip s3://blah/blah/blah
 
 package: mastodon adjectivenounbot.py local_settings.py
 	mkdir -p package
 	cp -R mastodon/* ./package/
+	cp -R mastodon/.libs_cffi_backend ./package/
 	cp adjective.txt ./package/
 	cp noun.txt ./package/
 	cp adjectivenounbot.py ./package/
