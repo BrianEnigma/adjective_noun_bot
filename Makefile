@@ -5,12 +5,13 @@ deploy: package
 	cd package; zip -r ../adjective_noun_bot.zip *
 	#aws s3 cp lambda_ebooks.zip s3://blah/blah/blah
 
-package: python-twitter adjectivenounbot.py local_settings.py
+package: python-twitter adjectivenounbot.py local_settings-twitter.py
 	mkdir -p package
 	cp -R python-twitter/* ./package/
 	cp adjective.txt ./package/
 	cp noun.txt ./package/
 	cp adjectivenounbot.py ./package/
+	cp local_settings-twitter.py local_settings.py
 	cp local_settings.py ./package/
 
 python-twitter:

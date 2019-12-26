@@ -1,4 +1,6 @@
 local_settings.py
+local_settings-twitter.py
+local_settings-mastodon.py
 package
 python-twitter
 adjective_noun_bot.zip
