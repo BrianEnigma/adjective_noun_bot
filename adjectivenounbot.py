@@ -37,6 +37,19 @@ def GetWord(dictFilePath):
     inFile.close()
     return word
 
+def GetExtendedSearchTerm(searchTerm):
+    extra_words = [
+        "weird", 
+        "odd", 
+        "strange", 
+        "unusual", 
+        "mysterious", 
+        "creepy", 
+        "curious", 
+        "freaky"
+    ]
+    return extra_words[random.randint(0, len(extra_words))] + ' ' + searchTerm
+
 def GetImageURL(searchTerm):
     url = API_ENDPOINT + '?'
     url += 'count=1&'
@@ -72,6 +85,7 @@ def GetAdjectiveNoun():
 def lambda_handler(event, context):
     result = ''
     image_url = ''
+    extended_search_term = ''
     if DEBUG==False:
         guess = random.choice(range(ODDS))
     else:
@@ -82,7 +96,8 @@ def lambda_handler(event, context):
             adjectiveNoun = GetAdjectiveNoun()
             if (len(adjectiveNoun) > 3):
                 tweet_text = adjectiveNoun
-                image_url = GetImageURL(adjectiveNoun)
+                extended_search_term = GetExtendedSearchTerm(adjectiveNoun)
+                image_url = GetImageURL(extended_search_term)
                 if (len(image_url) == 0):
                     #print("NO IMAGE FOR " + adjectiveNoun + ". RETRYING.")
                     time.sleep(2) # don't hammer the server
@@ -90,6 +105,7 @@ def lambda_handler(event, context):
                 #if (len(image_url) > 0):
                 #    tweet_text += "\n\n" + image_url
                 print(adjectiveNoun)
+                print(extended_search_term)
                 print(image_url)
 
                 # todo: image search for picture and attach?
@@ -110,5 +126,5 @@ def lambda_handler(event, context):
     else:
         result += str(guess) + " No, sorry, not this time.\n" #message if the random number fails.
 
-    return {'message': result, 'url': image_url}
+    return {'message': result, 'url': image_url, 'extended_search_term': extended_search_term}
 
